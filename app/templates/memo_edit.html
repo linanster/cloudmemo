@@ -15,11 +15,13 @@
       <br>
       event summary:
       <br>
-      <input type="text" name="summary" {% if summary %}value={{summary}}{% endif %}>
+      <input type="text" name="summary" {% if summary %}value={{summary}}{% endif %} maxlength=500 style="width: 400px">
       <br>
       event comment:
       <br>
-      <input type="text" name="comment" {% if comment %}value={{comment}}{% endif %}>
+      <textarea rows="10" cols="70" name="comment" maxlength="2000">
+{% if comment %}{{comment}}{% endif %}
+      </textarea>
       <br>
       <br>
       <button type="submit">submit</button>
@@ -29,8 +31,10 @@
       {% if recordid %}
         <a href="{{ url_for('blue_memo.cmd_delete', recordid=recordid, page=page) }}">delete</a> | 
       {% endif %}
-      <a href="{{ url_for('blue_memo.vf_index', page=page) }}">return</a>
+      <a href="{{ url_for('blue_memo.index', page=page) }}">return</a>
     </form>
     <br>
-    {% include '_filezella.html' %}
+    {% if recordid %}
+      {% include '_filezella.html' %}
+    {% endif %}
 {% endblock body %}

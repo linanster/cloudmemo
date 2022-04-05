@@ -51,7 +51,7 @@ def createdb_mysql(table=False, dummy=False):
     if dummy:
         MemoRecord.seed()
         MemoFile.seed()
-        print('==insert dummy records to memorecord, memofile==')
+        print('==insert dummy data==: memorecord, memofile')
 
 @manager.command
 def deletedb_mysql(table=False, data=False):

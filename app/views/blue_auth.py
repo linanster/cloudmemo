@@ -18,7 +18,7 @@ def login():
         return render_template('auth_login.html', warning='login failed')
     login_user(user, remember=False)
     g.user = user
-    return redirect(next_page or url_for('blue_main.vf_index'))
+    return redirect(next_page or url_for('blue_main.index'))
 
 @blue_auth.route('/logout/')
 def logout():

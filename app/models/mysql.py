@@ -44,8 +44,9 @@ class MemoRecord(MyBaseModel):
     __tablename__ = 'memorecord'
     typecode = db_mysql.Column(db_mysql.Integer, db_mysql.ForeignKey(MemoType.code), nullable=False) 
     time = db_mysql.Column(db_mysql.DateTime, default=datetime.now(), nullable=False)
-    summary = db_mysql.Column(db_mysql.String(200), nullable=False)
-    comment = db_mysql.Column(db_mysql.String(200), nullable=True)
+    summary = db_mysql.Column(db_mysql.String(500), nullable=False)
+    # comment = db_mysql.Column(db_mysql.String(5000), nullable=True)
+    comment = db_mysql.Column(db_mysql.Text, nullable=True)
     type = db_mysql.relationship('MemoType', backref='records')
     def __init__(self, typecode, summary, comment='', time = datetime.now()):
         self.typecode = typecode
@@ -65,16 +66,18 @@ class MemoFile(MyBaseModel):
     __tablename__ = 'memofile'
     memorecordid = db_mysql.Column(db_mysql.Integer, db_mysql.ForeignKey(MemoRecord.id), nullable=False) 
     filename = db_mysql.Column(db_mysql.String(200), nullable=False)
+    deleted = db_mysql.Column(db_mysql.Boolean)
     memorecord = db_mysql.relationship('MemoRecord', backref='files')
-    def __init__(self, memorecordid, filename):
+    def __init__(self, memorecordid, filename, deleted):
         self.memorecordid = memorecordid
         self.filename = filename
+        self.deleted = deleted
     @staticmethod
     def seed():
-        f1 = MemoFile(1, 'a1.txt')
-        f2 = MemoFile(1, 'a2.txt')
-        f3 = MemoFile(2, 'b.txt')
-        f4 = MemoFile(3, 'c.txt')
+        f1 = MemoFile(1, 'a1.txt', False)
+        f2 = MemoFile(1, 'a2.txt', False)
+        f3 = MemoFile(2, 'b.txt', False)
+        f4 = MemoFile(3, 'c.txt', False)
         db_mysql.session.add_all([f1, f2, f3, f4])
         db_mysql.session.commit()
 

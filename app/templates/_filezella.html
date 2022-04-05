@@ -1,15 +1,10 @@
-<form action="{{ url_for('blue_memo.cmd_upload', recordid=recordid, page=page)}}" method="post" enctype=multipart/form-data>
-    <input type=file name=file>
-    <input type=submit value=Upload>
-</form>
-<br>
-
+<p>attached files:</p>
 <table border="1">
-    <tr>
+    {# <tr>
         <th> # </th>
         <th>filename</th>
         <th>operation</th>
-    </tr>
+    </tr> #}
     {% for file in files %}
         <tr>
             <td>{{ loop.index }}</td>
@@ -22,4 +17,18 @@
         </tr>
     {% endfor %}
 </table>
+<br>
+<form action="{{ url_for('blue_memo.cmd_upload', recordid=recordid, page=page)}}" method="post" enctype=multipart/form-data>
+    <input type=file name=file>
+    <input type=submit value=Upload>
+</form>
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            <p style="color:red">{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
 

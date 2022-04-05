@@ -14,7 +14,7 @@ blue_memo = Blueprint('blue_memo', __name__, url_prefix='/memo')
 @blue_memo.route('/')
 @blue_memo.route('/index/')
 @login_required
-def vf_index():
+def index():
     # records = MemoRecord.query.all()
     # records = MemoRecord.query.order_by(asc(MemoRecord.id)).all()
     myquery_mysql_memorecord = MemoRecord.query.order_by(asc(MemoRecord.id))
@@ -39,7 +39,9 @@ def edit():
         typecode = record.typecode
         summary = record.summary
         comment = record.comment
-        files = record.files
+        # files = record.files
+        # filter and remove files with deleted tag
+        files = [f for f in record.files if not f.deleted]
         page = request.args.get('page')
         params = {
             'page': page,
@@ -54,7 +56,6 @@ def edit():
         params = {}
         # record = 0
     return render_template('memo_edit.html', **params)
-    # return render_template('memo_edit.html', record=record)
 
 @blue_memo.route('/cmd_save/', methods=['get', 'post'])
 @login_required
@@ -78,18 +79,24 @@ def cmd_save():
         PER_PAGE = 10
         page = math.ceil(total_count/PER_PAGE)
     record.save()
-    return redirect(url_for('blue_memo.vf_index', page=page))
+    return redirect(url_for('blue_memo.index', page=page))
 
 @blue_memo.route('/cmd_delete/')
 @login_required
 def cmd_delete():
     recordid = request.args.get('recordid')
     page = request.args.get('page')
-    record = MemoRecord.query.get(recordid)
-    record.delete()
-    return redirect(url_for('blue_memo.vf_index', page=page))
+    # 1. delete correlated momefile
+    items = MemoFile.query.filter_by(memorecordid=recordid)
+    [item.delete() for item in items]
+    # 2. delete self
+    item = MemoRecord.query.get(recordid)
+    item.delete()
+    return redirect(url_for('blue_memo.index', page=page))
 
+###################
 #### filezella ####
+###################
 
 @blue_memo.route('/cmd_upload/', methods=['post'])
 @login_required
@@ -99,12 +106,19 @@ def cmd_upload():
     uploadfile = request.files.get('file')
     if uploadfile.filename == '':
         flash('no file selected')
+        pass
     if uploadfile:
+        # 1.save file
         filename = secure_filename(uploadfile.filename)
-        destfile = os.path.join(uploadfolder, filename)
-        uploadfile.save(destfile)
-        flash('upload success')
-        memofile = MemoFile(recordid, filename)
+        fullname = os.path.join(uploadfolder, filename)
+        uploadfile.save(fullname)
+        # 2.update database
+        # 2.1 clean record with same recordid and filename
+        fs = MemoFile.query.filter_by(memorecordid=recordid, filename=filename)
+        for f in fs:
+            f.delete()
+        # 2.2 insert a new record
+        memofile = MemoFile(recordid, filename, False)
         memofile.save()
     return redirect(url_for('blue_memo.edit', recordid=recordid, page=page))
 
@@ -120,19 +134,10 @@ def cmd_deletefile():
     filename = request.args.get('filename')
     recordid = request.args.get('recordid')
     page = request.args.get('page')
-    print('==filename==', filename)
-    print('==recordid==', recordid)
-    print('==page==', page)
-    # 1.delete file
-    fullname = os.path.join(uploadfolder, filename)
-    try:
-        os.remove(fullname)
-    except Exception as e:
-        print(e)
-    # 2.update database
+    # mark this file as deleted, not really do
     memofile = MemoFile.query.filter_by(memorecordid=recordid, filename=filename).first()
-    print('==memofile==', memofile)
-    memofile.delete()
+    memofile.deleted = True
+    memofile.save()
 
     return redirect(url_for('blue_memo.edit', recordid=recordid, page=page))
     

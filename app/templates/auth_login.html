@@ -14,5 +14,14 @@
     </form>
     <p class="text-warning">{{ warning }}</p>
 
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <p style="color:red">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+
 {% endblock body %}
 
