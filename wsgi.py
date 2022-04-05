@@ -11,4 +11,4 @@ def get_memotypes():
 if __name__ == '__main__':
 
     # envinfo()
-    application_cloudmemo.run(host='0.0.0.0', port=9000)
+    application_cloudmemo.run(host='0.0.0.0', port=5200)

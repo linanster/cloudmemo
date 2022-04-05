@@ -11,8 +11,8 @@ SQLALCHEMY_BINDS = {
 # 'sqlite_db3_auth': 'sqlite:///../sqlite/db3_auth.sqlite3',
 # 'sqlite_db4_hist': 'sqlite:///../sqlite/db4_hist.sqlite3',
 'sqlite_user_user': 'sqlite:///../sqlite/db1_user.sqlite3',
-'mysql_gecloudmemo_memotype': 'mysql+pymysql://root:123456@localhost:3306/gecloudmemo',
-'mysql_gecloudmemo_memorecord': 'mysql+pymysql://root:123456@localhost:3306/gecloudmemo',
-'mysql_gecloudmemo_memofile': 'mysql+pymysql://root:123456@localhost:3306/gecloudmemo',
+'mysql_gecloudmemo_memotype': 'mysql+pymysql://root1:123456@localhost:3306/gecloudmemo',
+'mysql_gecloudmemo_memorecord': 'mysql+pymysql://root1:123456@localhost:3306/gecloudmemo',
+'mysql_gecloudmemo_memofile': 'mysql+pymysql://root1:123456@localhost:3306/gecloudmemo',
 }
 

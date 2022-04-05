@@ -22,6 +22,10 @@ function red() {
 	  printf "${bold}${red}%s${reset}\n" "$@";
   }
 
+function get_release(){
+    echo $(cat /etc/os-release | grep ^NAME= | egrep -io "centos|ubuntu" | tr A-Z a-z)
+}
+
 # green "hello"
 # red "hello"
 
@@ -42,7 +46,14 @@ echo
 
 function install_main_service(){
   cd "${scriptdir}"
-  cp cloudmemo.service /usr/lib/systemd/system
+  if [ "$(get_release)" == "centos" ];then
+    cp cloudmemo.service /usr/lib/systemd/system
+  elif [ "$(get_release)" == "ubuntu" ];then
+    cp cloudmemo.service /lib/systemd/system
+  else
+    echo "release error"
+    exit 1
+  fi
   systemctl daemon-reload
   systemctl enable cloudmemo.service
   systemctl restart cloudmemo.service
@@ -54,7 +65,14 @@ function uninstall_main_service(){
   cd "${scriptdir}"
   systemctl stop cloudmemo.service
   systemctl disable cloudmemo.service
-  rm -f /usr/lib/systemd/system/cloudmemo.service
+  if [ "$(get_release)" == "centos" ];then
+    rm -f /usr/lib/systemd/system/cloudmemo.service
+  elif [ "$(get_release)" == "ubuntu" ];then
+    rm -f /lib/systemd/system/cloudmemo.service
+  else
+    echo "release error"
+    exit 1
+  fi
   systemctl daemon-reload
   echo
 }

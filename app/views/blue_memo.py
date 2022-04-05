@@ -61,7 +61,6 @@ def edit():
 @login_required
 def cmd_save():
     recordid = request.args.get('recordid', None)
-    print('==recordid==', recordid)
     typecode = request.form.get('typecode')
     summary = request.form.get('summary')
     comment = request.form.get('comment')
