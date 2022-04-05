@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from dateutil import tz
 #
 db_mysql = SQLAlchemy(use_native_unicode='utf8')
 
@@ -46,12 +47,12 @@ class MemoRecord(MyBaseModel):
     __bind_key__ = 'mysql_gecloudmemo_memorecord'
     __tablename__ = 'memorecord'
     typecode = db_mysql.Column(db_mysql.Integer, db_mysql.ForeignKey(MemoType.code), nullable=False) 
-    time = db_mysql.Column(db_mysql.DateTime, default=datetime.now(), nullable=False)
+    time = db_mysql.Column(db_mysql.DateTime, default=datetime.now(tz.gettz('Asia/Shanghai')), nullable=False)
     summary = db_mysql.Column(db_mysql.String(500), nullable=False)
     # comment = db_mysql.Column(db_mysql.String(5000), nullable=True)
     comment = db_mysql.Column(db_mysql.Text, nullable=True)
     type = db_mysql.relationship('MemoType', backref='records')
-    def __init__(self, typecode, summary, comment='', time = datetime.now()):
+    def __init__(self, typecode, summary, comment='', time = datetime.now(tz.gettz('Asia/Shanghai'))):
         self.typecode = typecode
         self.time = time
         self.summary = summary
