@@ -1,0 +1,31 @@
+# Customize
+
+# 1.general ignore
+**/*.py[cdo]
+**/*.swp
+**/*.sqlite3
+**/*.sqlite
+**/__pycache__
+
+# 2.ignore folder
+logs/*
+scripts/ignore/*
+sqlite/*
+venv/
+cert/*
+# migrations/
+cache/*
+upload/*
+
+# 3.ignore specified file
+scripts/testapi/1.data
+
+# 4.exceptions that not ignore
+!logs/.gitkeep
+!scripts/ignore/.gitkeep
+!sqlite/.gitkeep
+!doc/.gitkeep
+!cache/.gitkeep
+!upload/.gitkeep
+!cert/.gitkeep
+
