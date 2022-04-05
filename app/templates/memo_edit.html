@@ -1,5 +1,10 @@
 {% extends '_mybase.html' %}
 
+{% block scripts %}
+  {{ super() }}
+  <script src="{{ url_for('static',filename='js/my.js') }}" type="text/javascript"></script>
+{% endblock scripts %}
+
 {% block body %}
     {{ super() }}
     {# when new, recordid like this: #}
@@ -13,9 +18,11 @@
         {% endfor %}
       </select>
       <br>
+      <br>
       event summary:
       <br>
-      <input type="text" name="summary" {% if summary %}value={{summary}}{% endif %} maxlength=500 style="width: 400px">
+      <input type="text" name="summary" {% if summary %}value={{summary}}{% endif %} maxlength=500 style="width: 400px" required>
+      <br>
       <br>
       event comment:
       <br>
@@ -29,7 +36,7 @@
       <br>
       <br>
       {% if recordid %}
-        <a href="{{ url_for('blue_memo.cmd_delete', recordid=recordid, page=page) }}">delete</a> | 
+        <a href="{{ url_for('blue_memo.cmd_delete', recordid=recordid, page=page) }}" onClick="return confirm('confirm delete?')">delete</a> | 
       {% endif %}
       <a href="{{ url_for('blue_memo.index', page=page) }}">return</a>
     </form>

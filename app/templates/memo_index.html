@@ -24,7 +24,7 @@
           <td>{{ record.summary }}</td>
           <td>
             <a href="{{ url_for('blue_memo.edit', recordid=record.id, page=page) }}">detail</a>&nbsp;
-            <a href="{{ url_for('blue_memo.cmd_delete', recordid=record.id, page=page) }}">delete</a>
+            <a href="{{ url_for('blue_memo.cmd_delete', recordid=record.id, page=page) }}" onClick="return confirm('confirm delete?')">delete</a>
           </td>
         </tr>
       {% endfor %}
