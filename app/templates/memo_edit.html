@@ -21,14 +21,13 @@
       <br>
       event summary:
       <br>
-      <input type="text" name="summary" {% if summary %}value={{summary}}{% endif %} maxlength=500 style="width: 400px" required>
+      {# <input type="text" name="summary" {% if summary %}value={{ summary }}{% endif %} maxlength=500 style="width: 400px" required> #}
+      <textarea rows="1" cols="60" name="summary" maxlength="500" style="resize:none; overflow:hidden">{% if summary %}{{summary}}{% endif %}</textarea>
       <br>
       <br>
       event comment:
       <br>
-      <textarea rows="10" cols="70" name="comment" maxlength="2000">
-{% if comment %}{{comment}}{% endif %}
-      </textarea>
+      <textarea rows="10" cols="70" name="comment" maxlength="2000">{% if comment %}{{comment}}{% endif %}</textarea>
       <br>
       <br>
       <button type="submit">submit</button>

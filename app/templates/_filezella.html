@@ -1,6 +1,6 @@
 
 <p>attached files:</p>
-<table border="1">
+<table border="0" frame=void>
     {# <tr>
         <th> # </th>
         <th>filename</th>
@@ -8,7 +8,7 @@
     </tr> #}
     {% for file in files %}
         <tr>
-            <td>{{ loop.index }}</td>
+            <td title="id:{{file.id}}">{{ loop.index }}</td>
             <td>&nbsp;{{ file.filename }}&nbsp;</td>
             <td>
                 &nbsp;
