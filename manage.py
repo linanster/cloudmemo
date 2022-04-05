@@ -38,29 +38,33 @@ def deletedb_sqlite(table=False, data=False):
         print('==delete sqlite data==')
 
 @manager.command
-def createdb_mysql(table=False, data=False):
-    "--table --data"
-    from app.models.mysql import db_mysql, MemoType, MemoRecord
+def createdb_mysql(table=False, dummy=False):
+    "--table --dummy"
+    from app.models.mysql import db_mysql, MemoType, MemoRecord, MemoFile
     if table:
         db_mysql.create_all(bind='mysql_gecloudmemo_memotype')
         db_mysql.create_all(bind='mysql_gecloudmemo_memorecord')
+        db_mysql.create_all(bind='mysql_gecloudmemo_memofile')
         MemoType.seed()
-        print('==create mysql tables==: memotype, memorecord')
+        print('==create mysql tables==: memotype, memorecord, memofile')
         print('==initialize data==: memotype')
-    if data:
+    if dummy:
         MemoRecord.seed()
-        print('==insert dummy records to memorecord==')
+        MemoFile.seed()
+        print('==insert dummy records to memorecord, memofile==')
 
 @manager.command
 def deletedb_mysql(table=False, data=False):
     "--table --data"
-    from app.models.mysql import db_mysql, MemoType, MemoRecord
+    from app.models.mysql import db_mysql, MemoType, MemoRecord, MemoFile
     if table:
+        db_mysql.drop_all(bind='mysql_gecloudmemo_memofile')
         db_mysql.drop_all(bind='mysql_gecloudmemo_memorecord')
         db_mysql.drop_all(bind='mysql_gecloudmemo_memotype')
         print('==delete mysql tables==')
         return
     if data:
+        MemoFile.query.delete()
         MemoRecord.query.delete()
         MemoType.query.delete()
         db_mysql.session.commit()

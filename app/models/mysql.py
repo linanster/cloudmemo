@@ -60,4 +60,22 @@ class MemoRecord(MyBaseModel):
         db_mysql.session.add_all([r1, r2, r3])
         db_mysql.session.commit()
 
+class MemoFile(MyBaseModel):
+    __bind_key__ = 'mysql_gecloudmemo_memofile'
+    __tablename__ = 'memofile'
+    memorecordid = db_mysql.Column(db_mysql.Integer, db_mysql.ForeignKey(MemoRecord.id), nullable=False) 
+    filename = db_mysql.Column(db_mysql.String(200), nullable=False)
+    memorecord = db_mysql.relationship('MemoRecord', backref='files')
+    def __init__(self, memorecordid, filename):
+        self.memorecordid = memorecordid
+        self.filename = filename
+    @staticmethod
+    def seed():
+        f1 = MemoFile(1, 'a1.txt')
+        f2 = MemoFile(1, 'a2.txt')
+        f3 = MemoFile(2, 'b.txt')
+        f4 = MemoFile(3, 'c.txt')
+        db_mysql.session.add_all([f1, f2, f3, f4])
+        db_mysql.session.commit()
+
 

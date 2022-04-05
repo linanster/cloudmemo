@@ -1,0 +1,25 @@
+<form action="{{ url_for('blue_memo.cmd_upload', recordid=recordid, page=page)}}" method="post" enctype=multipart/form-data>
+    <input type=file name=file>
+    <input type=submit value=Upload>
+</form>
+<br>
+
+<table border="1">
+    <tr>
+        <th> # </th>
+        <th>filename</th>
+        <th>operation</th>
+    </tr>
+    {% for file in files %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>&nbsp;{{ file.filename }}&nbsp;</td>
+            <td>
+                &nbsp;
+                <a href="{{ url_for('blue_memo.cmd_download', filename=file.filename) }}">download</a>&nbsp; &nbsp;
+                <a href="{{ url_for('blue_memo.cmd_deletefile', filename=file.filename, recordid=recordid, page=page) }}">delete</a>&nbsp;
+            </td>
+        </tr>
+    {% endfor %}
+</table>
+

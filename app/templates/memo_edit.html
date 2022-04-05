@@ -2,8 +2,9 @@
 
 {% block body %}
     {{ super() }}
+    {# when new, recordid like this: #}
+    {# "POST /memo/cmd_save/?recordid=&page= HTTP/1.1" #}
     <form action="{{ url_for('blue_memo.cmd_save', recordid=recordid, page=page) }}", method="post">
-      {# <input type="hidden" name="recordid" value="{{recordid}}"> #}
       event type: 
       <br>
       <select name="typecode">
@@ -22,8 +23,14 @@
       <br>
       <br>
       <button type="submit">submit</button>
+      <button type="reset">reset</button>
       <br>
       <br>
-      <a href="{{ url_for('blue_memo.vf_index') }}">return</a>
+      {% if recordid %}
+        <a href="{{ url_for('blue_memo.cmd_delete', recordid=recordid, page=page) }}">delete</a> | 
+      {% endif %}
+      <a href="{{ url_for('blue_memo.vf_index', page=page) }}">return</a>
     </form>
+    <br>
+    {% include '_filezella.html' %}
 {% endblock body %}

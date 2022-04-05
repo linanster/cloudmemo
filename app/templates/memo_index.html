@@ -14,7 +14,6 @@
         <th width="200">time</th>
         <th width="200">type</th>
         <th width="600">summary</th>
-        <th width="400">comment</th>
         <th width="100">operation</th>
       </tr>
       {% for record in records %}
@@ -23,9 +22,8 @@
           <td>{{ record.time }}</td>
           <td>{{ record.type.name }}</td>
           <td>{{ record.summary }}</td>
-          <td>{{ record.comment }}</td>
           <td>
-            <a href="{{ url_for('blue_memo.edit', recordid=record.id, page=page) }}">edit</a>&nbsp;
+            <a href="{{ url_for('blue_memo.edit', recordid=record.id, page=page) }}">detail</a>&nbsp;
             <a href="{{ url_for('blue_memo.cmd_delete', recordid=record.id, page=page) }}">delete</a>
           </td>
         </tr>

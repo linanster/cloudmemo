@@ -1,10 +1,13 @@
-from flask import Blueprint, request, render_template, redirect, url_for
+from flask import Blueprint, request, render_template, redirect, url_for, flash, send_from_directory
 from flask_login import login_required
 from sqlalchemy import asc
 from flask_paginate import Pagination, get_page_parameter
+from werkzeug.utils import secure_filename
+import os
 import math
 #
-from app.models.mysql import MemoRecord, MemoType
+from app.models.mysql import MemoRecord, MemoType, MemoFile
+from app.myglobals import uploadfolder
 #
 blue_memo = Blueprint('blue_memo', __name__, url_prefix='/memo')
 
@@ -36,6 +39,7 @@ def edit():
         typecode = record.typecode
         summary = record.summary
         comment = record.comment
+        files = record.files
         page = request.args.get('page')
         params = {
             'page': page,
@@ -43,16 +47,20 @@ def edit():
             'typecode': typecode,
             'summary': summary,
             'comment': comment,
+            'files': files,
         }
     # new
     else:
         params = {}
+        # record = 0
     return render_template('memo_edit.html', **params)
+    # return render_template('memo_edit.html', record=record)
 
 @blue_memo.route('/cmd_save/', methods=['get', 'post'])
 @login_required
 def cmd_save():
     recordid = request.args.get('recordid', None)
+    print('==recordid==', recordid)
     typecode = request.form.get('typecode')
     summary = request.form.get('summary')
     comment = request.form.get('comment')
@@ -80,3 +88,52 @@ def cmd_delete():
     record = MemoRecord.query.get(recordid)
     record.delete()
     return redirect(url_for('blue_memo.vf_index', page=page))
+
+#### filezella ####
+
+@blue_memo.route('/cmd_upload/', methods=['post'])
+@login_required
+def cmd_upload():
+    recordid = request.args.get('recordid')
+    page = request.args.get('page')
+    uploadfile = request.files.get('file')
+    if uploadfile.filename == '':
+        flash('no file selected')
+    if uploadfile:
+        filename = secure_filename(uploadfile.filename)
+        destfile = os.path.join(uploadfolder, filename)
+        uploadfile.save(destfile)
+        flash('upload success')
+        memofile = MemoFile(recordid, filename)
+        memofile.save()
+    return redirect(url_for('blue_memo.edit', recordid=recordid, page=page))
+
+@blue_memo.route('/cmd_download/', methods=['get'])
+@login_required
+def cmd_download():
+    filename = request.args.get('filename')
+    return send_from_directory(uploadfolder, filename, as_attachment=True)
+
+@blue_memo.route('/cmd_deletefile/', methods=['get'])
+@login_required
+def cmd_deletefile():
+    filename = request.args.get('filename')
+    recordid = request.args.get('recordid')
+    page = request.args.get('page')
+    print('==filename==', filename)
+    print('==recordid==', recordid)
+    print('==page==', page)
+    # 1.delete file
+    fullname = os.path.join(uploadfolder, filename)
+    try:
+        os.remove(fullname)
+    except Exception as e:
+        print(e)
+    # 2.update database
+    memofile = MemoFile.query.filter_by(memorecordid=recordid, filename=filename).first()
+    print('==memofile==', memofile)
+    memofile.delete()
+
+    return redirect(url_for('blue_memo.edit', recordid=recordid, page=page))
+    
+
