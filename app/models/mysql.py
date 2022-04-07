@@ -47,7 +47,7 @@ class MemoRecord(MyBaseModel):
     __bind_key__ = 'mysql_gecloudmemo_memorecord'
     __tablename__ = 'memorecord'
     typecode = db_mysql.Column(db_mysql.Integer, db_mysql.ForeignKey(MemoType.code), nullable=False) 
-    time = db_mysql.Column(db_mysql.DateTime, default=datetime.now(tz.gettz('Asia/Shanghai')), nullable=False)
+    time = db_mysql.Column(db_mysql.DateTime, nullable=False)
     summary = db_mysql.Column(db_mysql.String(500), nullable=False)
     # comment = db_mysql.Column(db_mysql.String(5000), nullable=True)
     comment = db_mysql.Column(db_mysql.Text, nullable=True)
