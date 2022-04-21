@@ -27,7 +27,7 @@ def createdb_sqlite(table=False, data=False):
 @manager.command
 def deletedb_sqlite(table=False, data=False):
     "--table --data"
-    from app.models.sqlite import db_sqlite
+    from app.models.sqlite import db_sqlite, User
     if table:
         db_sqlite.drop_all(bind='sqlite_user_user')
         print('==delete sqlite tables==')

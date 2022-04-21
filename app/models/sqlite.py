@@ -46,10 +46,8 @@ class User(UserMixin, MyBaseModel):
 
     @staticmethod
     def seed():
-        user1 = User('user1', '123456')
-        user2 = User('user2', '123456')
-        user3 = User('user3', '123456')
-        seeds = [user1, user2, user3]
+        user1 = User('user1', 'makeituptome')
+        seeds = [user1,]
         db_sqlite.session.add_all(seeds)
         db_sqlite.session.commit()
 
