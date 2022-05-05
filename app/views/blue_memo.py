@@ -87,7 +87,15 @@ def cmd_delete():
     page = request.args.get('page')
     # 1. delete correlated momefile
     items = MemoFile.query.filter_by(memorecordid=recordid)
-    [item.delete() for item in items]
+    # version1: only delete db
+    # [item.delete() for item in items]
+    # version2: delete db and file
+    for item in items:
+        # step1: delete file
+        fullname = os.path.join(uploadfolder, item.filename)
+        os.remove(fullname)
+        # step2: delete database record
+        item.delete()
     # 2. delete self
     item = MemoRecord.query.get(recordid)
     item.delete()
@@ -133,10 +141,17 @@ def cmd_deletefile():
     filename = request.args.get('filename')
     recordid = request.args.get('recordid')
     page = request.args.get('page')
-    # mark this file as deleted, not really do
+    # version1: mark this file as deleted, not really do
+    # memofile = MemoFile.query.filter_by(memorecordid=recordid, filename=filename).first()
+    # memofile.deleted = True
+    # memofile.save()
+    # version2: do delete
+    # step1: delete file
+    fullname = os.path.join(uploadfolder, filename)
+    os.remove(fullname)
+    # step2: delete database record
     memofile = MemoFile.query.filter_by(memorecordid=recordid, filename=filename).first()
-    memofile.deleted = True
-    memofile.save()
+    memofile.delete()
 
     return redirect(url_for('blue_memo.edit', recordid=recordid, page=page))
     
