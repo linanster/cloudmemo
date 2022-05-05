@@ -52,9 +52,9 @@ class MemoRecord(MyBaseModel):
     # comment = db_mysql.Column(db_mysql.String(5000), nullable=True)
     comment = db_mysql.Column(db_mysql.Text, nullable=True)
     type = db_mysql.relationship('MemoType', backref='records')
-    def __init__(self, typecode, summary, comment='', time = datetime.now(tz.gettz('Asia/Shanghai'))):
+    def __init__(self, typecode, summary, comment=''):
         self.typecode = typecode
-        self.time = time
+        self.time = datetime.now(tz.gettz('Asia/Shanghai'))
         self.summary = summary
         self.comment = comment        
     @staticmethod
