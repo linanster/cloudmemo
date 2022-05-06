@@ -55,7 +55,13 @@ def edit():
         }
     # new
     else:
-        params = {}
+        try:
+            author = session.get('username')
+        except:
+            author = ''
+        params = {
+            'author': author,
+        }
         # record = 0
     return render_template('memo_edit.html', **params)
 
