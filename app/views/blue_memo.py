@@ -6,10 +6,12 @@ from werkzeug.utils import secure_filename
 import os
 import math
 #
-from app.models.mysql import MemoRecord, MemoType, MemoFile
+from app.models.mysql import MemoRecord, MemoType, MemoFile, MemoComment
 from app.myglobals import uploadfolder
 #
 blue_memo = Blueprint('blue_memo', __name__, url_prefix='/memo')
+
+PER_PAGE = 30
 
 @blue_memo.route('/')
 @blue_memo.route('/index/')
@@ -20,7 +22,6 @@ def index():
     myquery_mysql_memorecord = MemoRecord.query.order_by(asc(MemoRecord.id))
     # pagination code
     total_count = myquery_mysql_memorecord.count()
-    PER_PAGE = 30
     page = request.args.get(get_page_parameter(), type=int, default=1) #获取页码，默认为第一页
     # start/end is like 0/100, 100/200, .etc
     start = (page-1)*PER_PAGE
@@ -35,13 +36,12 @@ def edit():
     recordid = request.args.get('recordid')
     # edit
     if recordid:
-        record = MemoRecord.query.get(recordid)
-        typecode = record.typecode
-        summary = record.summary
-        comment = record.comment
-        # files = record.files
-        # filter and remove files with deleted tag
-        files = [f for f in record.files if not f.deleted]
+        memorecord = MemoRecord.query.get(recordid)
+        memocomment = memorecord.comments[0]
+        typecode = memorecord.typecode
+        summary = memorecord.summary
+        comment = memocomment.comment
+        files = memorecord.files
         page = request.args.get('page')
         params = {
             'page': page,
@@ -64,20 +64,26 @@ def cmd_save():
     typecode = request.form.get('typecode')
     summary = request.form.get('summary')
     comment = request.form.get('comment')
+    memorecord = None
+    memocomment = None
     # edit
     if recordid:
-        record = MemoRecord.query.get(recordid)
-        record.typecode = typecode
-        record.summary = summary
-        record.comment = comment
+        memorecord = MemoRecord.query.get(recordid)
+        memocomment = memorecord.comments[0]
+        memorecord.typecode = typecode
+        memorecord.summary = summary
+        memocomment.comment = comment
         page = request.args.get('page')
+        memorecord.save()
+        memocomment.save()
     # new
     else:
-        record = MemoRecord(typecode, summary, comment)
+        memorecord = MemoRecord(typecode, summary)
+        memorecord.save()
+        memocomment = MemoComment(memorecord.id, comment)
+        memocomment.save()
         total_count = MemoRecord.query.count() + 1
-        PER_PAGE = 10
         page = math.ceil(total_count/PER_PAGE)
-    record.save()
     return redirect(url_for('blue_memo.index', page=page))
 
 @blue_memo.route('/cmd_delete/')
@@ -86,19 +92,22 @@ def cmd_delete():
     recordid = request.args.get('recordid')
     page = request.args.get('page')
     # 1. delete correlated momefile
-    items = MemoFile.query.filter_by(memorecordid=recordid)
+    memofiles = MemoFile.query.filter_by(memorecordid=recordid)
     # version1: only delete db
-    # [item.delete() for item in items]
+    # [memofile.delete() for memofile in memofiles]
     # version2: delete db and file
-    for item in items:
+    for memofile in memofiles:
         # step1: delete file
-        fullname = os.path.join(uploadfolder, item.filename)
+        fullname = os.path.join(uploadfolder, memofile.filename)
         os.remove(fullname)
         # step2: delete database record
-        item.delete()
-    # 2. delete self
-    item = MemoRecord.query.get(recordid)
-    item.delete()
+        memofile.delete()
+    # 2. delete correlated memocomment
+    memocomments = MemoComment.query.filter_by(memorecordid=recordid)
+    [memocomment.delete() for memocomment in memocomments]
+    # 3. delete self
+    memofile = MemoRecord.query.get(recordid)
+    memofile.delete()
     return redirect(url_for('blue_memo.index', page=page))
 
 ###################

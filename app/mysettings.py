@@ -14,5 +14,6 @@ SQLALCHEMY_BINDS = {
 'mysql_gecloudmemo_memotype': 'mysql+pymysql://root1:123456@localhost:3306/gecloudmemo',
 'mysql_gecloudmemo_memorecord': 'mysql+pymysql://root1:123456@localhost:3306/gecloudmemo',
 'mysql_gecloudmemo_memofile': 'mysql+pymysql://root1:123456@localhost:3306/gecloudmemo',
+'mysql_gecloudmemo_memocomment': 'mysql+pymysql://root1:123456@localhost:3306/gecloudmemo',
 }
 

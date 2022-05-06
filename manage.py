@@ -19,7 +19,7 @@ def createdb_sqlite(table=False, data=False):
     from app.models.sqlite import db_sqlite, User
     if table:
         db_sqlite.create_all(bind='sqlite_user_user')
-        print('==create sqlite tables==')
+        print('==create sqlite tables==: user')
     if data:
         User.seed()
         print('==initialize sqlite data==')
@@ -38,32 +38,32 @@ def deletedb_sqlite(table=False, data=False):
         print('==delete sqlite data==')
 
 @manager.command
-def createdb_mysql(table=False, dummy=False):
-    "--table --dummy"
-    from app.models.mysql import db_mysql, MemoType, MemoRecord, MemoFile
+def createdb_mysql(table=False, data=False):
+    "--table --data"
+    from app.models.mysql import db_mysql, MemoType, MemoRecord, MemoFile, MemoComment
     if table:
         db_mysql.create_all(bind='mysql_gecloudmemo_memotype')
         db_mysql.create_all(bind='mysql_gecloudmemo_memorecord')
         db_mysql.create_all(bind='mysql_gecloudmemo_memofile')
+        db_mysql.create_all(bind='mysql_gecloudmemo_memocomment')
+        print('==create mysql tables==: memotype, memorecord, memofile, memocomment')
+    if data:
         MemoType.seed()
-        print('==create mysql tables==: memotype, memorecord, memofile')
-        print('==initialize data==: memotype')
-    if dummy:
-        MemoRecord.seed()
-        MemoFile.seed()
-        print('==insert dummy data==: memorecord, memofile')
+        print('==insert data==: memotype')
 
 @manager.command
 def deletedb_mysql(table=False, data=False):
     "--table --data"
     from app.models.mysql import db_mysql, MemoType, MemoRecord, MemoFile
     if table:
+        db_mysql.drop_all(bind='mysql_gecloudmemo_memocomment')
         db_mysql.drop_all(bind='mysql_gecloudmemo_memofile')
         db_mysql.drop_all(bind='mysql_gecloudmemo_memorecord')
         db_mysql.drop_all(bind='mysql_gecloudmemo_memotype')
         print('==delete mysql tables==')
         return
     if data:
+        MemoComment.query.delete()
         MemoFile.query.delete()
         MemoRecord.query.delete()
         MemoType.query.delete()

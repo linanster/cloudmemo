@@ -35,12 +35,13 @@ class MemoType(MyBaseModel):
     @staticmethod
     def seed():
         t1 = MemoType(1, 'Xlink NPI Development')
-        t2 = MemoType(2, 'Xlink Cloud Update')
+        t2 = MemoType(2, 'Xlink Cloud Release')
         t3 = MemoType(3, 'Xlink Cloud Accident')
-        t4 = MemoType(4, 'CTC Local Verification Test')
-        t5 = MemoType(5, 'US Request Support')
-        t6 = MemoType(6, 'Other')
-        db_mysql.session.add_all([t1, t2, t3, t4, t5, t6])
+        t4 = MemoType(4, 'CTC Test')
+        t5 = MemoType(5, 'US Support')
+        t6 = MemoType(6, 'Meeting and Discusstion')
+        t7 = MemoType(7, 'Miscellaneous')
+        db_mysql.session.add_all([t1, t2, t3, t4, t5, t6, t7])
         db_mysql.session.commit()
 
 class MemoRecord(MyBaseModel):
@@ -49,26 +50,14 @@ class MemoRecord(MyBaseModel):
     typecode = db_mysql.Column(db_mysql.Integer, db_mysql.ForeignKey(MemoType.code), nullable=False) 
     time = db_mysql.Column(db_mysql.DateTime, nullable=False)
     summary = db_mysql.Column(db_mysql.String(500), nullable=False)
-    # comment = db_mysql.Column(db_mysql.String(5000), nullable=True)
-    comment = db_mysql.Column(db_mysql.Text, nullable=True)
     type = db_mysql.relationship('MemoType', backref='records')
-    def __init__(self, typecode, summary, comment=''):
+    def __init__(self, typecode, summary):
         self.typecode = typecode
         self.time = datetime.now(tz.gettz('Asia/Shanghai'))
         self.summary = summary
-        self.comment = comment        
     @staticmethod
     def seed():
-        r1 = MemoRecord(5, 'Investigate Tim’s question', '2.1 google action binding errors\n2.2 detailed commands logs during google voice automation test environment')
-        r2 = MemoRecord(1, 'Share location requests are being evaluated.')
-        r3 = MemoRecord(6, 'Dr. Wang raised a requirement', 'need to develop a tool to record cloud service functionality and release log.')
-        r4 = MemoRecord(2, 'Service optimization postpone', 'Service optimization bug has been fixed, postpone to next week to deploy.')
-        r5 = MemoRecord(5, 'Validate Gina’s account', 'Validate Gina’s account about motion detection and person detection, test report has been sent out.')
-        r6 = MemoRecord(5, 'Thermostat FW 12104 statistics have been sent out', 'Next week CTC hold a meeting to discuss usually used query requests.')
-        r7 = MemoRecord(3, 'GCP DB3 server automatically restart on last Sunday', 'Do you think we need to further discussion or can we go on to do the Dual Write directly?\nIf need to discussion, can we have an online meeting, here I tentatively schedule this meeting on this Friday morning, from 9:00 AM to 9:45 AM, Shanghai time\nIf no need further discussion, we will directly start the Dual Write operations on Next Monday, from 14:30PM to 17:00PM, Shanghai time.')
-        r8 = MemoRecord(4, 'Google Cloud Action issues discussion', )
-        db_mysql.session.add_all([r1, r2, r3, r4, r5, r6, r7, r8])
-        db_mysql.session.commit()
+        pass
 
 class MemoFile(MyBaseModel):
     __bind_key__ = 'mysql_gecloudmemo_memofile'
@@ -84,11 +73,17 @@ class MemoFile(MyBaseModel):
     @staticmethod
     def seed():
         pass
-        # f1 = MemoFile(1, 'a1.txt', False)
-        # f2 = MemoFile(1, 'a2.txt', False)
-        # f3 = MemoFile(2, 'b.txt', False)
-        # f4 = MemoFile(3, 'c.txt', False)
-        # db_mysql.session.add_all([f1, f2, f3, f4])
-        # db_mysql.session.commit()
 
+class MemoComment(MyBaseModel):
+    __bind_key__ = 'mysql_gecloudmemo_memocomment'
+    __tablename__ = 'memocomment'
+    memorecordid = db_mysql.Column(db_mysql.Integer, db_mysql.ForeignKey(MemoRecord.id), nullable=False)
+    comment = db_mysql.Column(db_mysql.Text, nullable=True)
+    memorecord = db_mysql.relationship('MemoRecord', backref='comments')
+    def __init__(self, memorecordid, comment):
+        self.memorecordid = memorecordid
+        self.comment = comment
+    @staticmethod
+    def seed():
+        pass
 
