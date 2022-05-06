@@ -9,6 +9,7 @@
 
 # 2.ignore folder
 logs/*
+log/*
 scripts/ignore/*
 sqlite/*
 venv/
@@ -22,6 +23,7 @@ scripts/testapi/1.data
 
 # 4.exceptions that not ignore
 !logs/.gitkeep
+!log/.gitkeep
 !scripts/ignore/.gitkeep
 !sqlite/.gitkeep
 !doc/.gitkeep
