@@ -3,7 +3,7 @@ from app.models import init_models
 from app.views import init_views
 from app.ext import init_ext
 # from app.apis import init_apis
-# from app.mymiddleware import load_middleware
+from app.mymiddleware import load_middleware
 
 def create_app():
     app = Flask(__name__)
@@ -12,7 +12,7 @@ def create_app():
     init_views(app)
     init_ext(app)
     # init_apis(app)
-    # load_middleware(app)
+    load_middleware(app)
     return app
 
 def envinfo():
