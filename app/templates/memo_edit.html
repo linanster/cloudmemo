@@ -43,7 +43,7 @@
       {% if recordid %}
         {#<a href="{{ url_for('blue_memo.cmd_delete', recordid=recordid, page=page) }}" onClick="return confirm('confirm delete?')">delete</a> | #}
         <form id="form2" action="{{ url_for('blue_memo.cmd_delete', recordid=recordid, page=page) }}" method="post" style="display:inline">
-           | <a href="javascript:document.getElementById('form2').submit();" onClick="return confirm('confirm delete?')">delete</a>
+           | <a href="javascript:document.getElementById('form2').submit();" onClick="return confirm('confirm delete ={{summary}}= ?')">delete</a>
         </form>
       {% endif %}
     <br>

@@ -29,7 +29,7 @@
             <a href="{{ url_for('blue_memo.edit', recordid=record.id, page=page) }}">detail</a>&nbsp;
             {#<a href="{{ url_for('blue_memo.cmd_delete', recordid=record.id, page=page) }}" onClick="return confirm('confirm delete?')">delete</a>#}
             <form name="form1" id="form1" action="{{ url_for('blue_memo.cmd_delete', recordid=record.id, page=page) }}" method="post" style="display:inline">
-              <a href="javascript:document.getElementById('form1').submit();" onClick="return confirm('confirm delete?')">delete</a>
+              <a href="javascript:document.getElementById('form1').submit();" onClick="return confirm('confirm delete ={{record.summary}}= ?')">delete</a>
             </form>
           </td>
         </tr>
