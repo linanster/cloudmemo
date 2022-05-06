@@ -25,3 +25,4 @@ Flask-Migrate==2.5.3
 Flask-JWT==0.3.2
 Flask-Caching==1.8.0
 python-dateutil==2.8.2
+tzlocal==4.2
