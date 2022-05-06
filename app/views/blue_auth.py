@@ -1,4 +1,4 @@
-from flask import Blueprint, request, render_template, url_for, g, redirect
+from flask import Blueprint, request, render_template, url_for, redirect, session
 from flask_login import login_user, logout_user
 from app.views.blue_main import blue_main
 from app.models.sqlite import User
@@ -17,7 +17,7 @@ def login():
     if not user or not user.verify_password(password):
         return render_template('auth_login.html', warning='login failed')
     login_user(user, remember=False)
-    g.user = user
+    session['username'] = user.username
     return redirect(next_page or url_for('blue_main.index'))
 
 @blue_auth.route('/logout/')

@@ -1,4 +1,4 @@
-from flask import Blueprint, request, render_template, redirect, url_for, flash, send_from_directory
+from flask import Blueprint, request, render_template, redirect, url_for, flash, send_from_directory, session
 from flask_login import login_required
 from sqlalchemy import asc
 from flask_paginate import Pagination, get_page_parameter
@@ -40,6 +40,7 @@ def edit():
         memocomment = memorecord.comments[0]
         typecode = memorecord.typecode
         summary = memorecord.summary
+        author = memorecord.author
         comment = memocomment.comment
         files = memorecord.files
         page = request.args.get('page')
@@ -48,6 +49,7 @@ def edit():
             'recordid': recordid,
             'typecode': typecode,
             'summary': summary,
+            'author': author,
             'comment': comment,
             'files': files,
         }
@@ -78,7 +80,11 @@ def cmd_save():
         memocomment.save()
     # new
     else:
-        memorecord = MemoRecord(typecode, summary)
+        try:
+            author = session.get('username')
+        except:
+            author = ''
+        memorecord = MemoRecord(typecode, summary, author)
         memorecord.save()
         memocomment = MemoComment(memorecord.id, comment)
         memocomment.save()

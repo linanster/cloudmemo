@@ -50,11 +50,13 @@ class MemoRecord(MyBaseModel):
     typecode = db_mysql.Column(db_mysql.Integer, db_mysql.ForeignKey(MemoType.code), nullable=False) 
     time = db_mysql.Column(db_mysql.DateTime, nullable=False)
     summary = db_mysql.Column(db_mysql.String(500), nullable=False)
+    author = db_mysql.Column(db_mysql.String(50), nullable=True)
     type = db_mysql.relationship('MemoType', backref='records')
-    def __init__(self, typecode, summary):
+    def __init__(self, typecode, summary, author):
         self.typecode = typecode
         self.time = datetime.now(tz.gettz('Asia/Shanghai'))
         self.summary = summary
+        self.author = author
     @staticmethod
     def seed():
         pass

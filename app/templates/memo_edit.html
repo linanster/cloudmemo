@@ -21,8 +21,12 @@
       <br>
       event summary:
       <br>
-      {# <input type="text" name="summary" {% if summary %}value={{ summary }}{% endif %} maxlength=500 style="width: 400px" required> #}
       <textarea rows="1" cols="80" name="summary" maxlength="500" style="resize:none; overflow:hidden">{% if summary %}{{summary}}{% endif %}</textarea>
+      <br>
+      <br>
+      author:
+      <br>
+      <textarea rows="1" cols="20" name="author" maxlength="50" style="resize:none; overflow:hidden" disabled="disabled">{% if author %}{{author}}{% endif %}</textarea>
       <br>
       <br>
       event comment:
