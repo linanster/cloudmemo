@@ -23,5 +23,6 @@ def login():
 @blue_auth.route('/logout/')
 def logout():
     logout_user()
+    session.pop('username')
     return redirect(url_for('blue_auth.login'))
 
