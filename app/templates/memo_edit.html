@@ -38,11 +38,15 @@
       <button type="reset">reset</button>
       <br>
       <br>
-      {% if recordid %}
-        <a href="{{ url_for('blue_memo.cmd_delete', recordid=recordid, page=page) }}" onClick="return confirm('confirm delete?')">delete</a> | 
-      {% endif %}
-      <a href="{{ url_for('blue_memo.index', page=page) }}">return</a>
     </form>
+      <a href="{{ url_for('blue_memo.index', page=page) }}" style="display:inline">return</a>
+      {% if recordid %}
+        {#<a href="{{ url_for('blue_memo.cmd_delete', recordid=recordid, page=page) }}" onClick="return confirm('confirm delete?')">delete</a> | #}
+        <form id="form2" action="{{ url_for('blue_memo.cmd_delete', recordid=recordid, page=page) }}" method="post" style="display:inline">
+           | <a href="javascript:document.getElementById('form2').submit();" onClick="return confirm('confirm delete?')">delete</a>
+        </form>
+      {% endif %}
+    <br>
     <br>
     {% if recordid %}
       {% include '_filezella.html' %}

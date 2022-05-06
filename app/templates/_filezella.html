@@ -13,7 +13,10 @@
             <td>
                 &nbsp;
                 <a href="{{ url_for('blue_memo.cmd_download', filename=file.filename) }}">download</a>&nbsp; &nbsp;
-                <a href="{{ url_for('blue_memo.cmd_deletefile', filename=file.filename, recordid=recordid, page=page) }}" onClick="return confirm_delete();">delete</a>&nbsp;
+                {#<a href="{{ url_for('blue_memo.cmd_deletefile', filename=file.filename, recordid=recordid, page=page) }}" onClick="return confirm_delete();">delete</a>&nbsp;#}
+            <form id="form3" action="{{ url_for('blue_memo.cmd_deletefile', filename=file.filename, recordid=recordid, page=page) }}" method="post" style="display:inline">
+              <a href="javascript:document.getElementById('form3').submit();" onClick="return confirm('confirm delete?')">delete</a>
+            </form>
             </td>
         </tr>
     {% endfor %}

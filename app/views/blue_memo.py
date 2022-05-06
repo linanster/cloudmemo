@@ -98,7 +98,7 @@ def cmd_save():
         page = math.ceil(total_count/PER_PAGE)
     return redirect(url_for('blue_memo.index', page=page))
 
-@blue_memo.route('/cmd_delete/')
+@blue_memo.route('/cmd_delete/', methods=['post'])
 @login_required
 def cmd_delete():
     recordid = request.args.get('recordid')
@@ -156,7 +156,7 @@ def cmd_download():
     filename = request.args.get('filename')
     return send_from_directory(uploadfolder, filename, as_attachment=True)
 
-@blue_memo.route('/cmd_deletefile/', methods=['get'])
+@blue_memo.route('/cmd_deletefile/', methods=['post'])
 @login_required
 def cmd_deletefile():
     filename = request.args.get('filename')
