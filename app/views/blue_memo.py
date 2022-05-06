@@ -102,7 +102,6 @@ def cmd_save():
 @login_required
 def cmd_delete():
     recordid = request.args.get('recordid')
-    print('==recordid==', recordid)
     page = request.args.get('page')
     # 1. delete correlated momefile
     memofiles = MemoFile.query.filter_by(memorecordid=recordid)
