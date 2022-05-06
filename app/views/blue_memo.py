@@ -102,6 +102,7 @@ def cmd_save():
 @login_required
 def cmd_delete():
     recordid = request.args.get('recordid')
+    print('==recordid==', recordid)
     page = request.args.get('page')
     # 1. delete correlated momefile
     memofiles = MemoFile.query.filter_by(memorecordid=recordid)
@@ -118,8 +119,8 @@ def cmd_delete():
     memocomments = MemoComment.query.filter_by(memorecordid=recordid)
     [memocomment.delete() for memocomment in memocomments]
     # 3. delete self
-    memofile = MemoRecord.query.get(recordid)
-    memofile.delete()
+    memorecord = MemoRecord.query.get(recordid)
+    memorecord.delete()
     return redirect(url_for('blue_memo.index', page=page))
 
 ###################
