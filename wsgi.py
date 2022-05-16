@@ -8,6 +8,11 @@ def get_memotypes():
     from app.models.mysql import MemoType
     return MemoType.query.all()
 
+@application_cloudmemo.template_filter('fetch_day')
+def func1(datetime_obj):
+    return datetime_obj.strftime('%Y-%m-%d')
+
+
 if __name__ == '__main__':
 
     # envinfo()

@@ -13,7 +13,7 @@
     <table border="1">
       <tr>
         <th width="30">#</th>
-        <th width="180">time</th>
+        <th width="120">time</th>
         <th width="200">type</th>
         <th width="600">summary</th>
         <th width="100" align="center">author</th>
@@ -22,7 +22,7 @@
       {% for record in records %}
         <tr>
           <td title="id:{{record.id}}">{{ loop.index + pagination.skip }}</td>
-          <td>{{ record.time }}</td>
+          <td title="{{record.time}}" style="text-align:center;">{{ record.time|fetch_day }}</td>
           <td>{{ record.type.name }}</td>
           <td>{{ record.summary }}</td>
           <td>{{ record.author }}</td>
